@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"social-network/utils"
+	"social-network/app/utils"
 	"strings"
 )
 

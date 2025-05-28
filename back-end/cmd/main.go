@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"social-network/db"
-	"social-network/handler"
-	"social-network/utils"
+	"social-network/app/handler"
+	"social-network/app/utils"
+	db "social-network/database"
 )
 
 func main() {
@@ -20,7 +20,6 @@ func main() {
 	router := http.NewServeMux()
 
 	router.Handle("/", Middleware(http.HandlerFunc(handler.Root)))
-	
 
 	fmt.Println("✅ Server running on: http://localhost:8080")
 	err = http.ListenAndServe(":8080", router)
@@ -30,10 +29,8 @@ func main() {
 	}
 }
 
-
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		
 		session, err := r.Cookie("session")
 		if err != nil || session.Value == "" {
 			utils.SendData(w, http.StatusForbidden, map[string]any{"status": false})
@@ -45,7 +42,7 @@ func Middleware(next http.Handler) http.Handler {
 			utils.SendData(w, http.StatusForbidden, map[string]any{"status": false})
 			return
 		}
-	
+
 		next.ServeHTTP(w, r)
 	})
 }

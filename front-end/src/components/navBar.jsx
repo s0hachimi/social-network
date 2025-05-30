@@ -1,25 +1,15 @@
 import Link from "next/link";
-import "./globals.css";
 
-
-
-export const metadata = {
-  title: "Social Network",
-}
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className="">
-
-        <header>
+export default function NavBar() {
+    return (
+          <header>
           <nav className="navigation">
 
             <Link href="/Profile">
               <button>Profile</button>
             </Link>
 
-             <Link href="/">
+             <Link href="/Posts">
               <button>Posts</button>
             </Link>
 
@@ -41,12 +31,5 @@ export default function RootLayout({ children }) {
 
           </nav>
         </header>
-
-
-        {children}
-
-
-      </body>
-    </html>
-  );
+    )
 }

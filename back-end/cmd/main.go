@@ -20,6 +20,7 @@ func main() {
 	router := http.NewServeMux()
 
 	router.Handle("/", Middleware(http.HandlerFunc(handler.Root)))
+	router.HandleFunc("/register", handler.Register)
 
 	fmt.Println("✅ Server running on: http://localhost:8080")
 	err = http.ListenAndServe(":8080", router)

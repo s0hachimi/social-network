@@ -1,10 +1,36 @@
+'use client';
 
 import Link from "next/link"
 import "../../../style/login.css"
 
 export default function register() {
+
+  const submitForm = async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.target)
+    try {
+
+      const resp = await fetch('http://localhost:8080/register', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await resp.json()
+
+      console.log(data)
+      
+    } catch (error) {
+      console.error(error)
+    }
+
+    
+      
+  }
+
   return (
-    <div id="register-container" >
+   
+      <div id="register-container" >
         <div className="info-side">
           <h2>Create an account</h2>
           <p>Join us and enjoy all the benefits of our platform</p>
@@ -18,7 +44,7 @@ export default function register() {
 
         <div className="register">
           <h1>Create Your Account</h1>
-          <form id="register-form" method="post">
+          <form id="register-form" onSubmit={submitForm}>
             <div className="name-row">
               <div className="form-group">
                 <label htmlFor="firstName">First Name</label>

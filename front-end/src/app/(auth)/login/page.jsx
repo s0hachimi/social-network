@@ -1,7 +1,60 @@
+'use client';
+
 import Link from "next/link";
 import "../../../style/login.css"
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+
+const router = useRouter()
+
+
+  const submitForm = async (e) => {
+    e.preventDefault()
+
+    const msgErr = document.getElementById('error-log')
+
+    const formData = new FormData(e.target)
+
+
+    const json = {
+      Email: formData.get("email"),
+      Password: formData.get("password")
+    }
+
+    if (!json.Password || !json.Email) {
+      msgErr.textContent = "Please fill up fields"
+      msgErr.style.color = "red"
+      return
+    }
+
+    try {
+
+      const resp = await fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: formData
+      })
+
+      const data = await resp.json()
+
+      if (data.success) {
+        router.push("/Posts")
+      } else {
+        msgErr.textContent = data.message
+        msgErr.style.color = "red"
+      }
+
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
+
+
+
 
   return (
     <div>
@@ -14,7 +67,7 @@ export default function Login() {
 
         <div className="login-form">
           <h1>Login</h1>
-          <form id="login-form" method="post">
+          <form id="login-form" onSubmit={submitForm} >
             <div className="form-group">
               <label>Nickname / Email</label>
               <input

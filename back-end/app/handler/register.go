@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
 	"social-network/app/utils"
 	db "social-network/database"
 )
@@ -19,16 +20,23 @@ type User struct {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	
+	CORS(w, r)
+
+	if r.Method == http.MethodPost {
 		message := ""
 		var info User
 		errore := json.NewDecoder(r.Body).Decode(&info)
 		if errore != nil {
-			fmt.Println(errore)
+			fmt.Println("hona", errore)
 			return
 		}
-		fmt.Println(info)
+
+		fmt.Println(1, info)
+
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+
 		validatEmail := db.CheckInfo(info.Email, "email")
 		if !validatEmail {
 			message = "Email already exists"
@@ -43,24 +51,34 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		}
 		if message != "" {
 			w.WriteHeader(http.StatusConflict)
-			json.NewEncoder(w).Encode(map[string]interface{}{"success": true, "message": message})
+			json.NewEncoder(w).Encode(map[string]any{"success": true, "message": message})
 			return
 		}
 		var err error
 		info.Password, err = utils.HashPassword(info.Password)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]interface{}{"success": false, "message": "Internal server error"})
+			json.NewEncoder(w).Encode(map[string]any{"success": false, "message": "Internal server error"})
 			return
 		}
 		err = db.Insertuser(info.FirstName, info.LastName, info.Email, info.Gender, info.Age, info.Nickname, info.Password)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]interface{}{"success": false, "message": "Internal server error"})
+			json.NewEncoder(w).Encode(map[string]any{"success": false, "message": "Internal server error"})
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]interface{}{"success": false, "message": ""})
+		json.NewEncoder(w).Encode(map[string]any{"success": true, "message": ""})
 
+	}
+}
+
+func CORS(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, DELETE, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.WriteHeader(http.StatusNoContent)
+		return
 	}
 }

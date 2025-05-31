@@ -40,6 +40,7 @@ export default function register() {
 
       const resp = await fetch('http://localhost:8080/register', {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },

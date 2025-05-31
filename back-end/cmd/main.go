@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+
 	"social-network/app/handler"
 	"social-network/app/utils"
 	db "social-network/database"
@@ -19,7 +20,7 @@ func main() {
 
 	router := http.NewServeMux()
 
-	router.Handle("/", Middleware(http.HandlerFunc(handler.Root)))
+	router.HandleFunc("/", handler.Root)
 
 	router.HandleFunc("/register", handler.Register)
 	router.HandleFunc("/login", handler.Login)
@@ -34,11 +35,25 @@ func main() {
 
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session, err := r.Cookie("session")
+
+        // w.Header().Set("Content-Type", "application/json")
+        // w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+        // w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+        // if r.Method == "OPTIONS" {
+        //     w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+        //     w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        //     w.WriteHeader(http.StatusOK)
+        //     return
+        // }
+
+		session, err := r.Cookie("SessionToken")
 		if err != nil || session.Value == "" {
+			fmt.Println(err)
 			utils.SendData(w, http.StatusForbidden, map[string]any{"status": false})
 			return
 		}
+		fmt.Println(session.Value)
 
 		have := db.HaveToken(session.Value)
 		if !have {

@@ -32,10 +32,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println(1, info)
+		Access(w)
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		fmt.Println(1, info)
 
 		validatEmail := db.CheckInfo(info.Email, "email")
 		if !validatEmail {
@@ -66,7 +65,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			utils.SendData(w, http.StatusInternalServerError, map[string]any{"success": false, "message": "Internal server error"})
 			return
 		}
-		
+
 		utils.SendData(w, http.StatusOK, map[string]any{"success": true, "message": ""})
 	}
 }
@@ -76,7 +75,14 @@ func CORS(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, DELETE, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
+}
+
+func Access(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
 }

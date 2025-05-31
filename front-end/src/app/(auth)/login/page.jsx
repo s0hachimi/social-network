@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
 
-const router = useRouter()
+  const router = useRouter()
 
 
   const submitForm = async (e) => {
@@ -32,18 +32,21 @@ const router = useRouter()
 
       const resp = await fetch('http://localhost:8080/login', {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: formData
+        body: JSON.stringify(json)
       })
 
       const data = await resp.json()
 
-      if (data.success) {
+      console.log(data);
+
+      if (data.status) {
         router.push("/Posts")
       } else {
-        msgErr.textContent = data.message
+        msgErr.textContent = data.error
         msgErr.style.color = "red"
       }
 
@@ -52,7 +55,7 @@ const router = useRouter()
     }
 
   }
-  
+
 
   return (
     <div>

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func CheckInfo(info string, input string) bool { ////hna kanoxofo wax email ola wax nikname kayn 3la hsab input xno fiha wax email ola wax nikname
+func CheckInfo(info string, input string) bool { 
 	var inter int
 	quire := "SELECT COUNT(*) FROM users WHERE " + input + " = ?"
 	err := DB.QueryRow(quire, info).Scan(&inter)
@@ -29,7 +29,7 @@ func Getpasswor(input string, typ string) (string, error) {
 }
 
 func Updatesession(typ string, tocken string, input string) error {
-	query := "UPDATE users SET sessionToken = $1 WHERE " + typ + " = $2"
+	query := "UPDATE users SET sessionToken = ? WHERE " + typ + " = ?"
 	_, err := DB.Exec(query, tocken, input)
 	if err != nil {
 		return err

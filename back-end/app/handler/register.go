@@ -46,30 +46,28 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		if !validatNikname {
 			message = "Nickname already exists"
 		}
+
 		if !validatEmail && !validatNikname {
 			message = "Email and nickname already exist"
 		}
+
 		if message != "" {
-			w.WriteHeader(http.StatusConflict)
-			json.NewEncoder(w).Encode(map[string]any{"success": true, "message": message})
+			utils.SendData(w, http.StatusConflict, map[string]any{"success": false, "message": message})
 			return
 		}
 		var err error
 		info.Password, err = utils.HashPassword(info.Password)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]any{"success": false, "message": "Internal server error"})
+			utils.SendData(w, http.StatusInternalServerError, map[string]any{"success": false, "message": "Internal server error"})
 			return
 		}
 		err = db.Insertuser(info.FirstName, info.LastName, info.Email, info.Gender, info.Age, info.Nickname, info.Password)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]any{"success": false, "message": "Internal server error"})
+			utils.SendData(w, http.StatusInternalServerError, map[string]any{"success": false, "message": "Internal server error"})
 			return
 		}
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]any{"success": true, "message": ""})
-
+		
+		utils.SendData(w, http.StatusOK, map[string]any{"success": true, "message": ""})
 	}
 }
 

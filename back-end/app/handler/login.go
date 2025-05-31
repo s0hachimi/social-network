@@ -9,17 +9,21 @@ import (
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
+
 	CORS(w, r)
 
 	if r.Method == "POST" {
+
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+
 		var boo bool
 		var err error
 		typ := ""
 		var hashedPassword string
+
 		if strings.Contains(email, "@") {
 			boo = db.CheckInfo(email, "email")
 			typ = "email"
@@ -39,15 +43,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		SessionToken, erre := utils.GenerateSessionToken()
-		if erre != nil {
-			utils.SendData(w, http.StatusUnauthorized, map[string]any{
-				"error":  "Invalid " + typ + " or password",
-				"status": false,
-			})
-			return
-		}
-		err = db.Updatesession(typ, SessionToken, email) ////email mmkin ikon nikname mmkin ikon email
+		
+		SessionToken, expiration := utils.GenerateSessionToken()
+		
+		err = db.Updatesession(typ, SessionToken, email)
 		if err != nil {
 			utils.SendData(w, http.StatusUnauthorized, map[string]any{
 				"error":  "Invalid " + typ + " or password",
@@ -59,6 +58,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, &http.Cookie{
 			Name:  "SessionToken",
 			Value: SessionToken,
+			Expires:  expiration,
 			Path:  "/",
 		})
 

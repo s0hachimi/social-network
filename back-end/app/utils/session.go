@@ -1,22 +1,17 @@
 package utils
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"net/http"
+	"time"
+
+	"github.com/google/uuid"
 )
 
-func GenerateSessionToken() (string, error) {
-	tokne := make([]byte, 32)
-	_, err := rand.Read(tokne)
-	if err != nil {
-		return "", errors.New("creation sissiontoken")
-	}
-
-	tokn := base64.URLEncoding.EncodeToString(tokne)
-	return tokn, nil
+func GenerateSessionToken() (string, time.Time) {
+	sessionToken := uuid.New().String()
+	expiration := time.Now().Add(1 * time.Hour)
+	return sessionToken, expiration
 }
 
 func SendData(w http.ResponseWriter, code int, data any) {

@@ -107,8 +107,23 @@ export default function register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="nickname">Nickname</label>
+            <label htmlFor="date">Date of Birth</label>
+            <input type="date" name="date" />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="profile_image">Avatar/Image (Optional)</label>
+            <input type="file" name="profile_image" />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="nickname">Nickname (Optional)</label>
             <input type="text" name="nickname" placeholder="johndoe" />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="about_me">Nickname (Optional)</label>
+            <input type="text" name="about_me" placeholder="Hello, my name is john"/>
           </div>
 
           <div className="form-group">

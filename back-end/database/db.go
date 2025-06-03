@@ -26,15 +26,18 @@ func CreateTable() error {
 	// Code to create a table
 	tables := `
 	CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		first_name TEXT NOT NULL,
-		last_name TEXT NOT NULL,
-		email TEXT NOT NULL UNIQUE,
-		gender TEXT NOT NULL,
-		age INTEGER NOT NULL,
-		nikname TEXT NOT NULL UNIQUE,
-		password TEXT NOT NULL,
-		sessionToken TEXT
+    	id INTEGER PRIMARY KEY AUTOINCREMENT,
+    	first_name TEXT NOT NULL,
+    	last_name TEXT NOT NULL,
+    	email TEXT NOT NULL UNIQUE,
+    	gender TEXT NOT NULL,
+    	age INTEGER NOT NULL,
+    	nickname TEXT NOT NULL UNIQUE,
+    	password TEXT NOT NULL,
+    	profile_image TEXT,
+    	birth_date TEXT,
+    	about_me TEXT,
+    	sessionToken TEXT
 	);
 	
 	CREATE TABLE IF NOT EXISTS postes (

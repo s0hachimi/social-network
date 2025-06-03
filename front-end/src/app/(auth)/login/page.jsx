@@ -94,7 +94,7 @@ export default function Login() {
             <button type="submit" id="login-btn">Login</button>
 
             <div className="register-link">
-              Pas encore de compte?{" "}
+              No account yet ?
               <Link href="/register" id="resgesterlogin">
                 Create an account
               </Link>

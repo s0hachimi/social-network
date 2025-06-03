@@ -17,10 +17,12 @@ type User struct {
 	Age       string `json:"age"`
 	Gender    string `json:"gender"`
 	Nickname  string `json:"nickname"`
+	Profile   string `json:"profile_image"`
+	BirthDate string `json:"date"`
+	AboutMe   string `json:"about_me"`
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	
 	CORS(w, r)
 
 	if r.Method == http.MethodPost {

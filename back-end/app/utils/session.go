@@ -10,7 +10,7 @@ import (
 
 func GenerateSessionToken() (string, time.Time) {
 	sessionToken := uuid.New().String()
-	expiration := time.Now().Add(1 * time.Hour)
+	expiration := time.Now().Add(12 * time.Hour)
 	return sessionToken, expiration
 }
 

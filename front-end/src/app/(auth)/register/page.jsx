@@ -27,8 +27,15 @@ export default function register() {
       Password: formData.get("password"),
       Age: formData.get("age"),
       Gender: formData.get("gender"),
-      Nickname: formData.get("nickname")
+      Nickname: formData.get("nickname"),
+      About_me: formData.get("about_me"),
+      Date: formData.get("date"),
     }
+
+    const Form = new FormData()
+
+    Form.append("profile_image", formData.get("profile_image"))
+     Form.append("info", JSON.stringify(json))
 
     if (!json.FirstName || !json.LastName || !json.Email || !json.Password || !json.Age || !json.Gender || !json.Nickname) {
       msgErr.textContent = "Please fill up fields"
@@ -41,10 +48,7 @@ export default function register() {
       const resp = await fetch('http://localhost:8080/register', {
         method: 'POST',
         credentials: "include",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(json)
+        body: Form
       })
 
       const data = await resp.json()
@@ -122,7 +126,7 @@ export default function register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="about_me">Nickname (Optional)</label>
+            <label htmlFor="about_me">About Me (Optional)</label>
             <input type="text" name="about_me" placeholder="Hello, my name is john"/>
           </div>
 

@@ -1,27 +1,41 @@
-import { redirect } from 'next/navigation'
+'use client'
 
-export default async function Root() {
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-  let data
-  
-  try {
-    const response = await fetch('http://localhost:8080/', {
-      method: "GET",
-      credentials: "include",
-    })
+export default function Root() {
 
-    data = await response.json()
+  const router = useRouter()
 
-  } catch (error) {
-    console.error(error)
-    return
-  }
+  useEffect(() => {
+    const fetchData = async () => {
 
-  console.log(data);
 
-  if (data.status) {
-    redirect('/Posts')
-  } else {
-    redirect('/login')
-  }
+      try {
+        const response = await fetch('http://localhost:8080/', {
+          method: 'GET',
+          credentials: "include",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        const data = await response.json()
+        console.log(data)
+
+        if (data.status) {
+          router.push('/Posts')
+        } else {
+          router.push('/login')
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+        router.push('/login')
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  return null
 }

@@ -40,8 +40,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			boo = db.CheckInfo(info.Email, "email")
 			typ = "email"
 		} else {
-			boo = db.CheckInfo(info.Email, "nikname")
-			typ = "nikname"
+			boo = db.CheckInfo(info.Email, "nickname")
+			typ = "nickname"
 		}
 
 		if !boo {
@@ -71,7 +71,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Name:     "SessionToken",
 			Value:    SessionToken,
 			Expires:  expiration,
-			// Path:     "/",
+			SameSite: http.SameSiteNoneMode,
 		})
 
 		utils.SendData(w, http.StatusOK, map[string]any{
@@ -79,5 +79,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			"status": true,
 		})
 
+		
 	}
 }

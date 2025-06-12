@@ -12,7 +12,7 @@ import (
 func main() {
 	Db, err := db.Db()
 	if err != nil {
-		fmt.Println("====Z", err)
+		fmt.Println("====>>", err)
 		return
 	}
 
@@ -35,17 +35,6 @@ func main() {
 
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-        // w.Header().Set("Content-Type", "application/json")
-        // w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-        // w.Header().Set("Access-Control-Allow-Credentials", "true")
-
-        // if r.Method == "OPTIONS" {
-        //     w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
-        //     w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        //     w.WriteHeader(http.StatusOK)
-        //     return
-        // }
 
 		session, err := r.Cookie("SessionToken")
 		if err != nil || session.Value == "" {

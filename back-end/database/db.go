@@ -37,6 +37,7 @@ func CreateTable() error {
     	profile_image TEXT,
     	birth_date TEXT,
     	about_me TEXT,
+		type_profile TEXT,
     	sessionToken TEXT
 	);
 	

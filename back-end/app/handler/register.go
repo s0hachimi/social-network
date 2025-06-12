@@ -29,44 +29,46 @@ type User struct {
 func Register(w http.ResponseWriter, r *http.Request) {
 	CORS(w, r)
 
-	
-
 	if r.Method == http.MethodPost {
+
+		Access(w)
+
 		var err error
 		message := ""
 
-		err = r.ParseMultipartForm(10 << 20) 
+		err = r.ParseMultipartForm(10 << 20)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Failed to parse form", http.StatusBadRequest)
 			return
 		}
 
-		file, handler, err := r.FormFile("profile_image")
-		if err != nil {
-			fmt.Println("=========++> ", err)
-			http.Error(w, "No file uploaded", http.StatusBadRequest)
-			return
-		}
-		defer file.Close()
-
 		uploadDir := "uploads"
 		os.MkdirAll(uploadDir, os.ModePerm)
 
-		uniqueFilename := fmt.Sprintf("%d_%s", time.Now().Unix(), handler.Filename)
+		filePath := ""
 
-		filePath := filepath.Join(uploadDir, uniqueFilename)
-		dst, err := os.Create(filePath)
-		if err != nil {
-			http.Error(w, "Unable to save the file", http.StatusInternalServerError)
-			return
-		}
-		defer dst.Close()
+		file, handler, err := r.FormFile("profile_image") //  && err.Error() != "http: no such file"
+		if err == nil && handler != nil {
 
-		_, err = io.Copy(dst, file)
-		if err != nil {
-			http.Error(w, "Unable to save the file", http.StatusInternalServerError)
-			return
+			defer file.Close()
+
+			uniqueFilename := fmt.Sprintf("%d_%s", time.Now().Unix(), handler.Filename)
+
+			filePath = filepath.Join(uploadDir, uniqueFilename)
+			dst, err := os.Create(filePath)
+			if err != nil {
+				http.Error(w, "Unable to save the file", http.StatusInternalServerError)
+				return
+			}
+			defer dst.Close()
+
+			_, err = io.Copy(dst, file)
+			if err != nil {
+				http.Error(w, "Unable to save the file", http.StatusInternalServerError)
+				return
+			}
+			
 		}
 
 		jsonData := r.FormValue("info")
@@ -77,8 +79,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("hona", errore)
 			return
 		}
-
-		Access(w)
 
 		validatEmail := db.CheckInfo(info.Email, "email")
 		if !validatEmail {
@@ -124,19 +124,6 @@ func CORS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-// func CORS(w http.ResponseWriter, r *http.Request) {
-//     origin := r.Header.Get("Origin")
-//     w.Header().Set("Access-Control-Allow-Origin", origin)
-//     w.Header().Set("Access-Control-Allow-Credentials", "true")
-//     w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-//     w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-    
-//     if r.Method == "OPTIONS" {
-//         w.WriteHeader(http.StatusOK)
-//         return
-//     }
-// }
 
 func Access(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")

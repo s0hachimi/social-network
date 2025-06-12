@@ -8,7 +8,7 @@ import (
 )
 
 func Insertuser(first_name string, last_name string, email string, gender string, age string, nikname string, password string, profile string, date string, aboutMe string) error {
-	infiuser, err := DB.Prepare("INSERT INTO users (first_name, last_name, email, gender, age, nickname, password, profile_image, birth_date, about_me) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	infiuser, err := DB.Prepare("INSERT INTO users (first_name, last_name, email, gender, age, nickname, password, profile_image, birth_date, about_me, type_profile) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -16,7 +16,7 @@ func Insertuser(first_name string, last_name string, email string, gender string
 	if err != nil {
 		return err
 	}
-	_, err = infiuser.Exec(first_name, last_name, email, gender, age_int, nikname, password, profile, date, aboutMe)
+	_, err = infiuser.Exec(first_name, last_name, email, gender, age_int, nikname, password, profile, date, aboutMe, "public")
 	if err != nil {
 		return err
 	}

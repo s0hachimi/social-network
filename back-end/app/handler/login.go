@@ -71,7 +71,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Name:     "SessionToken",
 			Value:    SessionToken,
 			Expires:  expiration,
-			SameSite: http.SameSiteNoneMode,
 		})
 
 		utils.SendData(w, http.StatusOK, map[string]any{
